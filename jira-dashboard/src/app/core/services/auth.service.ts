@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -31,8 +31,10 @@ export class AuthService {
         this.state.set(s);
         return s;
       }),
-      catchError(() => {
-        this.bffAvailable.set(false);
+      catchError((err) => {
+        // 401 = BFF está disponible pero la sesión no existe/expiró → mostrar botón OAuth
+        // Otro error = BFF no disponible (red, 503, etc.) → ocultar botón OAuth
+        this.bffAvailable.set(err instanceof HttpErrorResponse && err.status === 401);
         this.state.set({ authenticated: false });
         return of({ authenticated: false });
       }),
