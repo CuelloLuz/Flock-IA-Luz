@@ -1,0 +1,255 @@
+.app-container {
+  height: 100vh;
+  background: var(--bg-main);
+}
+
+// ── Sidenav ──────────────────────────────────────────────────────────────────
+.app-sidenav {
+  width: 220px;
+  background: var(--bg-sidebar) !important;
+  border-right: 1px solid var(--border) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px;
+
+  .brand-icon {
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    border-radius: 8px;
+    padding: 4px;
+    font-size: 22px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+
+  .brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+}
+
+.sidenav-project {
+  padding: 10px 16px 16px;
+
+  .project-eyebrow {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin: 0 0 4px;
+  }
+
+  .project-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+    line-height: 1.4;
+  }
+
+  .sprint-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--purple-dim);
+    color: var(--purple-light);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(139,92,246,.3);
+  }
+
+  .sprint-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.sidenav-nav {
+  flex: 1;
+  padding: 8px 8px;
+
+  a {
+    color: var(--text-muted);
+    border-radius: var(--radius) !important;
+    margin: 2px 0;
+    border-left: none !important;
+
+    mat-icon { color: var(--text-dim); transition: color .15s; }
+
+    &:hover {
+      background: var(--bg-hover) !important;
+      color: var(--text-primary);
+      mat-icon { color: var(--purple-light); }
+    }
+
+    &.active-link {
+      background: var(--purple-dim) !important;
+      color: var(--purple-light) !important;
+      border: 1px solid rgba(139,92,246,.3);
+      mat-icon { color: var(--purple) !important; }
+    }
+  }
+}
+
+mat-divider {
+  border-color: var(--border) !important;
+}
+
+.sidenav-footer {
+  margin-top: auto;
+
+  .user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 12px 16px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .user-info {
+    flex: 1;
+    overflow: hidden;
+
+    .user-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+  }
+
+  button { color: var(--text-muted) !important; }
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────────
+.app-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+  background: var(--bg-main);
+}
+
+.app-toolbar {
+  background: var(--bg-sidebar) !important;
+  border-bottom: 1px solid var(--border) !important;
+  height: 60px !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 0 var(--border);
+
+  .toolbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .toolbar-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin: 0;
+  }
+
+  .toolbar-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1;
+  }
+
+  .spacer { flex: 1; }
+
+  .toolbar-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-muted) !important;
+    border-color: var(--border) !important;
+  }
+
+  .login-btn {
+    background: linear-gradient(135deg, var(--purple), var(--orange)) !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-icon { font-size: 16px; }
+  }
+
+  .auth-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+
+    .auth-icon { font-size: 12px; width: 12px; height: 12px; }
+
+    &.badge-oauth {
+      background: rgba(34,197,94,.12);
+      color: #22c55e;
+      border-color: rgba(34,197,94,.25);
+    }
+    &.badge-basic {
+      background: rgba(234,179,8,.1);
+      color: #eab308;
+      border-color: rgba(234,179,8,.25);
+    }
+    &.badge-mock {
+      background: rgba(148,163,184,.08);
+      color: var(--text-muted);
+      border-color: var(--border);
+    }
+  }
+}
