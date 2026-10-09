@@ -1,0 +1,225 @@
+<div class="reports-root">
+
+  <!-- ── Header ───────────────────────────────────────────────────────── -->
+  <div class="page-header">
+    <mat-icon class="page-icon">bar_chart</mat-icon>
+    <div>
+      <h2 class="page-title">Reportes</h2>
+      <span class="page-sub">{{ sprint()?.name ?? 'Sprint activo' }} · {{ total() }} tareas en total</span>
+    </div>
+  </div>
+
+  <!-- ── KPI summary ──────────────────────────────────────────────────── -->
+  <div class="kpi-row">
+    <div class="kpi-card kpi-green">
+      <mat-icon class="kpi-icon">check_circle</mat-icon>
+      <div class="kpi-value">{{ done() }}</div>
+      <div class="kpi-label">Finalizadas</div>
+      <div class="kpi-sub">{{ donePct() }}% del total</div>
+    </div>
+    <div class="kpi-card kpi-purple">
+      <mat-icon class="kpi-icon">pending</mat-icon>
+      <div class="kpi-value">{{ inProg() }}</div>
+      <div class="kpi-label">En curso</div>
+      <div class="kpi-sub">Tareas activas</div>
+    </div>
+    <div class="kpi-card kpi-gray">
+      <mat-icon class="kpi-icon">radio_button_unchecked</mat-icon>
+      <div class="kpi-value">{{ todo() }}</div>
+      <div class="kpi-label">Por hacer</div>
+      <div class="kpi-sub">Sin iniciar</div>
+    </div>
+    <div class="kpi-card kpi-orange">
+      <mat-icon class="kpi-icon">sprint</mat-icon>
+      <div class="kpi-value">{{ sprintPct() }}%</div>
+      <div class="kpi-label">Sprint avanzado</div>
+      <div class="kpi-sub">Tiempo transcurrido</div>
+    </div>
+  </div>
+
+  <!-- ── Charts row ───────────────────────────────────────────────────── -->
+  <div class="charts-row">
+
+    <!-- Estado -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="card-title-icon">donut_large</mat-icon>
+          Distribución por estado
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Visual donut approximation with stacked bar -->
+        <div class="donut-stack">
+          @for (b of statusBars(); track b.label) {
+            @if (b.pct > 0) {
+              <div class="donut-segment" [class]="b.colorClass" [style.flex]="b.pct"
+                   [matTooltip]="b.label + ': ' + b.count + ' (' + b.pct + '%)'">
+              </div>
+            }
+          }
+        </div>
+        <div class="chart-legend">
+          @for (b of statusBars(); track b.label) {
+            <div class="legend-item">
+              <span class="legend-dot" [class]="b.colorClass"></span>
+              <span class="legend-label">{{ b.label }}</span>
+              <span class="legend-count">{{ b.count }}</span>
+              <span class="legend-pct">{{ b.pct }}%</span>
+            </div>
+          }
+        </div>
+
+        <mat-divider class="chart-divider"></mat-divider>
+
+        <div class="bar-list">
+          @for (b of statusBars(); track b.label) {
+            <div class="bar-row">
+              <span class="bar-label">{{ b.label }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [class]="b.colorClass" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="bar-count">{{ b.count }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Prioridad -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="card-title-icon">flag</mat-icon>
+          Distribución por prioridad
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="bar-list">
+          @for (b of priorityBars(); track b.label) {
+            <div class="bar-row">
+              <span class="bar-label">{{ b.label }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [class]="b.colorClass" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="bar-count">{{ b.count }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- ── Charts row 2 ─────────────────────────────────────────────────── -->
+  <div class="charts-row">
+
+    <!-- Equipo -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="card-title-icon">group</mat-icon>
+          Carga de trabajo por miembro
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="bar-list">
+          @for (b of teamBars(); track b.label) {
+            <div class="bar-row">
+              <div class="bar-label-avatar">
+                <div class="mini-avatar">{{ b.label[0] }}</div>
+                <span class="bar-label">{{ b.label }}</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" [class]="b.colorClass" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="bar-count">{{ b.count }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Tipo -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="card-title-icon">category</mat-icon>
+          Distribución por tipo
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="bar-list">
+          @for (b of typeBars(); track b.label) {
+            <div class="bar-row">
+              <span class="bar-label">{{ b.label }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [class]="b.colorClass" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="bar-count">{{ b.count }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- ── Sprint progress ──────────────────────────────────────────────── -->
+  @if (sprint()) {
+    <mat-card class="sprint-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="card-title-icon">sprint</mat-icon>
+          Estado del sprint
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="sprint-meta-grid">
+          <div class="sprint-meta-item">
+            <span class="meta-label">Sprint</span>
+            <span class="meta-value">{{ sprint()!.name }}</span>
+          </div>
+          <div class="sprint-meta-item">
+            <span class="meta-label">Inicio</span>
+            <span class="meta-value">{{ sprint()!.startDate | date:'dd MMM yyyy' }}</span>
+          </div>
+          <div class="sprint-meta-item">
+            <span class="meta-label">Fin</span>
+            <span class="meta-value">{{ sprint()!.endDate | date:'dd MMM yyyy' }}</span>
+          </div>
+          <div class="sprint-meta-item">
+            <span class="meta-label">Tiempo avanzado</span>
+            <span class="meta-value highlight">{{ sprintPct() }}%</span>
+          </div>
+          <div class="sprint-meta-item">
+            <span class="meta-label">Completado</span>
+            <span class="meta-value highlight green">{{ donePct() }}%</span>
+          </div>
+        </div>
+
+        <div class="dual-progress">
+          <div class="dp-row">
+            <span class="dp-label">Tiempo transcurrido</span>
+            <span class="dp-pct">{{ sprintPct() }}%</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="sprintPct()" class="prog-orange"></mat-progress-bar>
+
+          <div class="dp-row" style="margin-top:14px">
+            <span class="dp-label">Tareas completadas</span>
+            <span class="dp-pct">{{ donePct() }}%</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="donePct()" class="prog-green"></mat-progress-bar>
+        </div>
+
+        @if (sprint()!.goal) {
+          <div class="sprint-goal">
+            <mat-icon>track_changes</mat-icon>
+            <span>{{ sprint()!.goal }}</span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
+
+</div>
