@@ -4,6 +4,7 @@
   "outputDirectory": "dist/jira-dashboard/browser",
   "framework": null,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/jira/:path*", "destination": "/api/jira?path=:path*" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

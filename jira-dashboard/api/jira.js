@@ -11,9 +11,15 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ error: 'Jira not configured' });
   }
 
-  // req.url = /api/jira/rest/api/3/... → /rest/api/3/...
-  const jiraPath = req.url.replace(/^\/api\/jira/, '');
-  const jiraUrl  = JIRA_BASE_URL.replace(/\/$/, '') + jiraPath;
+  // vercel.json reescribe /api/jira/<path> → /api/jira?path=<path> (se conserva el resto del query)
+  const url = new URL(req.url, 'http://localhost');
+  const pathParam = url.searchParams.get('path');
+  url.searchParams.delete('path');
+  const jiraPath = pathParam != null
+    ? '/' + pathParam.replace(/^\/+/, '')
+    : url.pathname.replace(/^\/api\/jira/, '');
+  const query    = url.searchParams.toString();
+  const jiraUrl  = JIRA_BASE_URL.replace(/\/$/, '') + jiraPath + (query ? `?${query}` : '');
   const token    = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64');
 
   try {
