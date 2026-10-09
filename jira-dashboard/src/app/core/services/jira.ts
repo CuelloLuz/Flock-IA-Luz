@@ -126,14 +126,14 @@ export class JiraService {
   }
 
   private get apiBase(): string {
-    if (this.mode === 'oauth') return '/api/jira/rest/api/3';
-    return `${this.config?.baseUrl}/rest/api/3`;
+    // Tanto oauth como basic pasan por /api/jira/... (BFF local u OAuth serverless en Vercel)
+    return '/api/jira/rest/api/3';
   }
 
   private requestOptions() {
-    return this.mode === 'oauth'
-      ? { withCredentials: true }
-      : { headers: this.headers };
+    // OAuth: la sesión viaja via cookie HttpOnly
+    // Basic: el proxy serverless agrega las credenciales desde env vars
+    return this.mode === 'oauth' ? { withCredentials: true } : {};
   }
 
   getCurrentUser(): Observable<JiraUser> {
