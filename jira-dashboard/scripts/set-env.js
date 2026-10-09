@@ -10,7 +10,7 @@
 //   JIRA_API_TOKEN       →  apiToken
 //   JIRA_PROJECT         →  projectKey
 //
-const { writeFileSync, mkdirSync } = require('fs');
+const { writeFileSync, mkdirSync, existsSync } = require('fs');
 const { join } = require('path');
 
 const e = process.env;
@@ -43,6 +43,14 @@ const dir = join(__dirname, '..', 'src', 'environments');
 mkdirSync(dir, { recursive: true });
 writeFileSync(join(dir, 'environment.prod.ts'), content, 'utf8');
 console.log(`✅ environment.prod.ts generado`);
+
+// environment.ts está en .gitignore/.vercelignore (puede tener credenciales locales),
+// pero el código lo importa: en CI se crea con el mismo contenido para que compile.
+const devEnv = join(dir, 'environment.ts');
+if (!existsSync(devEnv)) {
+  writeFileSync(devEnv, content, 'utf8');
+  console.log(`✅ environment.ts generado (no existía)`);
+}
 console.log(`   login user  = ${user}`);
 console.log(`   jira base   = ${jiraBase || '(no configurado — modo mock)'}`);
 console.log(`   jira email  = ${jiraEmail || '(no configurado)'}`);

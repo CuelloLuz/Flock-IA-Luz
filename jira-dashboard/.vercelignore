@@ -1,0 +1,7 @@
+# Archivos locales que no deben subirse en `vercel deploy`
+src/environments/environment.ts
+.env
+.env.*
+node_modules
+dist
+.angular
