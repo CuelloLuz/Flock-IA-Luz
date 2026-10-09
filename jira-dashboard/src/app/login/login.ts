@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,13 +16,20 @@ import { environment } from '../../environments/environment';
   templateUrl: './login.html',
   styleUrl:    './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   user     = '';
   password = '';
   error    = signal(false);
   showPass = signal(false);
 
   constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // Si ya hay sesión activa, ir directo al dashboard
+    if (sessionStorage.getItem('auth') === '1') {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   submit(): void {
     if (

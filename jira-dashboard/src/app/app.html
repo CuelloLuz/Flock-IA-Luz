@@ -74,14 +74,10 @@
         {{ authBadge }}
       </span>
 
-      @if (!auth.state().authenticated) {
+      @if (!isProduction && !auth.state().authenticated) {
         <button mat-flat-button class="login-btn" (click)="auth.login()">
           <mat-icon>login</mat-icon>
           Conectar Jira (OAuth)
-        </button>
-      } @else {
-        <button mat-stroked-button class="toolbar-btn">
-          <mat-icon>download</mat-icon> Exportar
         </button>
       }
     </mat-toolbar>

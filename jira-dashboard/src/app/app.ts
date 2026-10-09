@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { environment } from '../environments/environment';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -37,8 +38,11 @@ export class App {
   readonly jira   = inject(JiraService);
   readonly router = inject(Router);
 
+  readonly isProduction = environment.production;
+
   get isLoginPage(): boolean {
-    return this.router.url === '/login' || this.router.url === '/';
+    const url = this.router.url;
+    return url === '/login' || url === '/' || url.startsWith('/auth/');
   }
 
   logout(): void {
