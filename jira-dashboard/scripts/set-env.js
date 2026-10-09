@@ -1,15 +1,26 @@
 // Genera src/environments/environment.prod.ts con las variables de entorno.
 // Se ejecuta como prebuild en Vercel (o cualquier CI/CD).
-// Variables esperadas: APP_USER, APP_PASS
+//
+// Acepta dos formatos de nombre de variable:
+//   Formato recomendado  →  Alternativa (camelCase)
+//   APP_USER             →  auth
+//   APP_PASS             →  password
+//   JIRA_BASE_URL        →  baseUrl
+//   JIRA_EMAIL           →  email
+//   JIRA_API_TOKEN       →  apiToken
+//   JIRA_PROJECT         →  projectKey
+//
 const { writeFileSync, mkdirSync } = require('fs');
 const { join } = require('path');
 
-const user = process.env.APP_USER || 'demo';
-const pass = process.env.APP_PASS || 'flock2026';
-const jiraBase  = process.env.JIRA_BASE_URL  || '';
-const jiraEmail = process.env.JIRA_EMAIL     || '';
-const jiraToken = process.env.JIRA_API_TOKEN || '';
-const jiraKey   = process.env.JIRA_PROJECT   || 'SCRUM';
+const e = process.env;
+
+const user      = e.APP_USER       || e.auth       || 'demo';
+const pass      = e.APP_PASS       || e.password   || 'flock2026';
+const jiraBase  = e.JIRA_BASE_URL  || e.baseUrl    || '';
+const jiraEmail = e.JIRA_EMAIL     || e.email      || '';
+const jiraToken = e.JIRA_API_TOKEN || e.apiToken   || '';
+const jiraKey   = e.JIRA_PROJECT   || e.projectKey || 'SCRUM';
 
 const content = `// Generado automáticamente por scripts/set-env.js — no editar manualmente.
 export const environment = {
@@ -30,4 +41,8 @@ export const environment = {
 const dir = join(__dirname, '..', 'src', 'environments');
 mkdirSync(dir, { recursive: true });
 writeFileSync(join(dir, 'environment.prod.ts'), content, 'utf8');
-console.log(`✅ environment.prod.ts generado (user=${user})`);
+console.log(`✅ environment.prod.ts generado`);
+console.log(`   login user  = ${user}`);
+console.log(`   jira base   = ${jiraBase || '(no configurado — modo mock)'}`);
+console.log(`   jira email  = ${jiraEmail || '(no configurado)'}`);
+console.log(`   jira project= ${jiraKey}`);
