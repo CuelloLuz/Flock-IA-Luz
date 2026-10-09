@@ -1,19 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import {
   JiraIssue, JiraProject, JiraSprint, JiraUser,
   SearchResult, ProjectSearchResult,
   PendingItem, ActivityUpdate, Milestone,
 } from '../models/jira.models';
-
-export interface JiraConfig {
-  baseUrl: string;
-  email: string;
-  apiToken: string;
-  projectKey?: string;
-}
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -90,40 +83,30 @@ export type AuthMode = 'mock' | 'basic' | 'oauth';
 @Injectable({ providedIn: 'root' })
 export class JiraService {
   private http = inject(HttpClient);
-  private config: JiraConfig | null = null;
+  private _projectKey = 'SCRUM';
   private mode: AuthMode = 'mock';
 
   get projectKey(): string {
-    return this.config?.projectKey ?? 'SCRUM';
+    return this._projectKey;
   }
 
   get authMode(): AuthMode {
     return this.mode;
   }
 
-  /** Basic Auth con API token (development) */
-  configure(config: JiraConfig): void {
-    this.config = config;
+  /** Basic Auth via proxy — el proxy serverless agrega las credenciales desde env vars del servidor */
+  configure(projectKey = 'SCRUM'): void {
+    this._projectKey = projectKey;
     this.mode = 'basic';
   }
 
   /** OAuth 2.0 via BFF proxy — el BFF agrega el Bearer token */
   configureOAuth(projectKey = 'SCRUM'): void {
-    this.config = { baseUrl: '', email: '', apiToken: '', projectKey };
+    this._projectKey = projectKey;
     this.mode = 'oauth';
   }
 
   private get useMock(): boolean { return this.mode === 'mock'; }
-
-  private get headers(): HttpHeaders {
-    if (!this.config || this.mode !== 'basic') return new HttpHeaders();
-    const token = btoa(`${this.config.email}:${this.config.apiToken}`);
-    return new HttpHeaders({
-      Authorization: `Basic ${token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    });
-  }
 
   private get apiBase(): string {
     // Tanto oauth como basic pasan por /api/jira/... (BFF local u OAuth serverless en Vercel)
@@ -153,11 +136,19 @@ export class JiraService {
     }
     const mockFallback = this.applyMockJql(jql);
     const fallback: SearchResult = { startAt, maxResults, total: mockFallback.length, issues: mockFallback };
-    return this.http.post<SearchResult>(
-      `${this.apiBase}/issue/search`,
-      { jql, fields, startAt, maxResults },
+    // /rest/api/3/search fue eliminado (CHANGE-2046): se usa /search/jql, que pagina
+    // con nextPageToken y no devuelve total.
+    return this.http.post<{ issues: JiraIssue[]; nextPageToken?: string; isLast?: boolean }>(
+      `${this.apiBase}/search/jql`,
+      { jql, fields, maxResults },
       this.requestOptions(),
-    ).pipe(catchError(() => of(fallback)));
+    ).pipe(
+      map(res => ({ startAt, maxResults, total: res.issues.length, issues: res.issues })),
+      catchError(err => {
+        console.error('Jira search error — usando datos mock:', err);
+        return of(fallback);
+      }),
+    );
   }
 
   getProjects(maxResults = 50): Observable<ProjectSearchResult> {

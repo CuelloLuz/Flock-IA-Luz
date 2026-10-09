@@ -7,9 +7,7 @@ export const environment = {
     password: 'flock2026',
   },
   jira: {
-    baseUrl:    '',
-    email:      '',
-    apiToken:   '',
+    enabled:    false,
     projectKey: 'SCRUM',
   },
 };

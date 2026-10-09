@@ -20,14 +20,14 @@ function initApp(jira: JiraService, auth: AuthService) {
       return;
     }
 
-    // 2️⃣ Fallback: Basic Auth si hay credenciales en environment.ts
-    const { baseUrl, email, apiToken, projectKey } = environment.jira;
-    if (baseUrl && email && apiToken) {
-      jira.configure({ baseUrl, email, apiToken, projectKey });
+    // 2️⃣ Fallback: Basic Auth via proxy si Jira está configurado en el servidor.
+    //    Las credenciales nunca llegan al navegador.
+    if (environment.jira.enabled) {
+      jira.configure(environment.jira.projectKey || 'SCRUM');
       return;
     }
 
-    // 3️⃣ Sin credenciales → modo mock (default)
+    // 3️⃣ Sin Jira configurado → modo mock (default)
   };
 }
 

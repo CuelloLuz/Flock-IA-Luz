@@ -21,6 +21,9 @@ const jiraBase  = e.JIRA_BASE_URL  || e.baseUrl    || '';
 const jiraEmail = e.JIRA_EMAIL     || e.email      || '';
 const jiraToken = e.JIRA_API_TOKEN || e.apiToken   || '';
 const jiraKey   = e.JIRA_PROJECT   || e.projectKey || 'SCRUM';
+// Email y token solo se usan para saber si Jira está configurado: NO se escriben
+// en el bundle. El proxy serverless (api/jira) los lee directo del entorno.
+const jiraEnabled = Boolean(jiraBase && jiraEmail && jiraToken);
 
 const content = `// Generado automáticamente por scripts/set-env.js — no editar manualmente.
 export const environment = {
@@ -30,9 +33,7 @@ export const environment = {
     password: '${pass}',
   },
   jira: {
-    baseUrl:    '${jiraBase}',
-    email:      '${jiraEmail}',
-    apiToken:   '${jiraToken}',
+    enabled:    ${jiraEnabled},
     projectKey: '${jiraKey}',
   },
 };
