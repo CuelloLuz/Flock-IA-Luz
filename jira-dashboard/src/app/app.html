@@ -74,7 +74,7 @@
         {{ authBadge }}
       </span>
 
-      @if (!isProduction && !auth.state().authenticated) {
+      @if (auth.bffAvailable() && !auth.state().authenticated) {
         <button mat-flat-button class="login-btn" (click)="auth.login()">
           <mat-icon>login</mat-icon>
           Conectar Jira (OAuth)

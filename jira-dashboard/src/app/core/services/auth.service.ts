@@ -21,12 +21,18 @@ export interface AuthState {
 export class AuthService {
   private http = inject(HttpClient);
 
-  readonly state = signal<AuthState>({ authenticated: false });
+  readonly state        = signal<AuthState>({ authenticated: false });
+  readonly bffAvailable = signal(false);
 
   check(): Observable<AuthState> {
     return this.http.get<AuthState>('/auth/me', { withCredentials: true }).pipe(
-      map(s => { this.state.set(s); return s; }),
+      map(s => {
+        this.bffAvailable.set(true);
+        this.state.set(s);
+        return s;
+      }),
       catchError(() => {
+        this.bffAvailable.set(false);
         this.state.set({ authenticated: false });
         return of({ authenticated: false });
       }),

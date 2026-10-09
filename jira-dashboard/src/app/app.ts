@@ -38,7 +38,6 @@ export class App {
   readonly jira   = inject(JiraService);
   readonly router = inject(Router);
 
-  readonly isProduction = environment.production;
 
   get isLoginPage(): boolean {
     const url = this.router.url;
