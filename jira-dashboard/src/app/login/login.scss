@@ -1,0 +1,116 @@
+.login-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-main);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 50% -10%, rgba(109,40,217,.25), transparent),
+    radial-gradient(ellipse 40% 40% at 80% 110%, rgba(249,115,22,.1), transparent);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 40px 36px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Brand ─────────────────────────────────────────────────────────────────────
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  .brand-icon {
+    background: linear-gradient(135deg, var(--purple), var(--orange));
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    mat-icon { font-size: 20px; }
+  }
+
+  .brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+}
+
+// ── Titles ────────────────────────────────────────────────────────────────────
+.login-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.login-sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+// ── Error ─────────────────────────────────────────────────────────────────────
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--red-dim);
+  border: 1px solid rgba(239,68,68,.3);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--red);
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+// ── Form ──────────────────────────────────────────────────────────────────────
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field {
+  width: 100%;
+
+  --mdc-outlined-text-field-outline-color: var(--border);
+  --mdc-outlined-text-field-focus-outline-color: var(--purple);
+  --mdc-outlined-text-field-label-text-color: var(--text-muted);
+  --mdc-outlined-text-field-input-text-color: var(--text-primary);
+
+  mat-icon { color: var(--text-dim); }
+}
+
+.submit-btn {
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--purple), var(--orange)) !important;
+  color: #fff !important;
+  height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px !important;
+
+  mat-icon { font-size: 18px; }
+
+  &:disabled {
+    opacity: .45 !important;
+  }
+}

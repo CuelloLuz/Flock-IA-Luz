@@ -1,0 +1,58 @@
+<div class="login-root">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="brand">
+      <div class="brand-icon">
+        <mat-icon>flutter_dash</mat-icon>
+      </div>
+      <span class="brand-name">Flockit</span>
+    </div>
+
+    <h1 class="login-title">Bienvenido</h1>
+    <p class="login-sub">Ingresá tus credenciales para continuar</p>
+
+    @if (error()) {
+      <div class="error-banner">
+        <mat-icon>error_outline</mat-icon>
+        Usuario o contraseña incorrectos
+      </div>
+    }
+
+    <form (ngSubmit)="submit()" #f="ngForm" class="login-form">
+
+      <mat-form-field appearance="outline" class="field">
+        <mat-label>Usuario</mat-label>
+        <mat-icon matPrefix>person_outline</mat-icon>
+        <input matInput
+          [(ngModel)]="user"
+          name="user"
+          autocomplete="username"
+          (input)="clearError()"
+          required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field">
+        <mat-label>Contraseña</mat-label>
+        <mat-icon matPrefix>lock_outline</mat-icon>
+        <input matInput
+          [type]="showPass() ? 'text' : 'password'"
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="current-password"
+          (input)="clearError()"
+          required />
+        <button mat-icon-button matSuffix type="button" (click)="showPass.set(!showPass())">
+          <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" class="submit-btn" [disabled]="!user || !password">
+        Ingresar
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+
+    </form>
+
+  </div>
+</div>
